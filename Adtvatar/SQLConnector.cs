@@ -41,7 +41,14 @@ namespace Adtvatar
         {
             string output = null;
             MySqlCommand command = new MySqlCommand(query, sqlConnection);
-            sqlConnection.Open();
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("Failed to make a connection to the database. \n Please check the login credentials.");
+            }
 
             MySqlDataReader reader = command.ExecuteReader();
             try
@@ -50,6 +57,10 @@ namespace Adtvatar
                 {
                     output += reader.GetString(0);
                 }
+            }
+            catch(Exception ex)
+            {
+                System.Windows.MessageBox.Show("An problem occurred during the database updata \n" + ex.Message);
             }
             finally
             {

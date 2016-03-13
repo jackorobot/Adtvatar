@@ -31,14 +31,7 @@ namespace Adtvatar
         public MainWindow()
         {
             InitializeComponent();
-            initialise();
-            setupConnection();
-
-            timer = new DispatcherTimer(DispatcherPriority.Send);
-            timer.Tick += Timer_Tick;
-            //Set interval at 1 minute
-            timer.Interval = new TimeSpan(0, 1, 0);
-            timer.Start();
+            
         }
 
         ~MainWindow()
@@ -50,16 +43,33 @@ namespace Adtvatar
         {
             updateScores();
 
+            Random rnd = new Random();
+            if(rnd.Next(0, 10) == 7)
+            {
+                //TO DO
+                animationUpdateAttacker();
+
+                //Rotate throug all nations
+                if (Attacker.ID == 3)
+                    Attacker = nations[0];
+                else
+                    Attacker = nations[Attacker.ID++];
+            }
 
         }
 
-        private void initialise()
+        void animationUpdateAttacker()
+        {
+            //TO DO
+        }
+
+        private void initialiseData()
         {
             nations = new Nation[4];
-            nations[0] = new Nation("Beer");
-            nations[1] = new Nation("Soda");
-            nations[2] = new Nation("Apfelkorn");
-            nations[3] = new Nation("Bacardi");
+            nations[0] = new Nation(0, "Beer");
+            nations[1] = new Nation(1, "Soda");
+            nations[2] = new Nation(2, "Apfelkorn");
+            nations[3] = new Nation(3, "Bacardi");
 
             //TO DO: Find right IDs
             drinks = new Dictionary<int, drinkTypes>();
@@ -76,6 +86,7 @@ namespace Adtvatar
             drinks.Add(9, drinkTypes.Bacardi); //Original
             drinks.Add(10, drinkTypes.Bacardi); //Lemon
 
+            Attacker = nations[0];
         }
 
         void setupConnection()
@@ -88,32 +99,66 @@ namespace Adtvatar
         {
             foreach(KeyValuePair<int, drinkTypes> drink in drinks)
             {
-                int score = connector.getConsumptionLastMinute(drink.Key);
-                switch (drink.Value)
+                if (drink.Value.ToString() == Attacker.Name)
                 {
-                    case drinkTypes.Beer:
-                        nations[0].Points += score;
-                        break;
+                    int score = connector.getConsumptionLastMinute(drink.Key);
+                    switch(Attacker.ID)
+                    {
+                        case 0:
+                            nations[0].Points += score;
+                            break;
 
-                    case drinkTypes.Soda:
-                        nations[1].Points += score;
-                        break;
+                        case 1:
+                            nations[1].Points += score;
+                            break;
 
-                    case drinkTypes.Apfelkorn:
-                        nations[2].Points += score;
-                        break;
+                        case 2:
+                            nations[2].Points += score;
+                            break;
 
-                    case drinkTypes.Bacardi:
-                        nations[3].Points += score;
-                        break;
+                        case 3:
+                            nations[3].Points += score;
+                            break;
+                    }
                 }
-                
+
+                #region Redundant
+                //CODE FOR ALWAYS UPDATING SCORES
+                //switch (drink.Value)
+                //{
+                //    case drinkTypes.Beer:
+                //        nations[0].Points += score;
+                //        break;
+
+                //    case drinkTypes.Soda:
+                //        nations[1].Points += score;
+                //        break;
+
+                //    case drinkTypes.Apfelkorn:
+                //        nations[2].Points += score;
+                //        break;
+
+                //    case drinkTypes.Bacardi:
+                //        nations[3].Points += score;
+                //        break;
+                //}
+                #endregion
+
             }
         }
 
         private void btConnect_Click(object sender, RoutedEventArgs e)
         {
-            
+            initialiseData();
+            setupConnection();
+
+            timer = new DispatcherTimer(DispatcherPriority.Send);
+            timer.Tick += Timer_Tick;
+            //Set interval at 1 minute
+            timer.Interval = new TimeSpan(0, 1, 0);
+            timer.Start();
+
+            Timer_Tick(null, null);
         }
     }
 }
