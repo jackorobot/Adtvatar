@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Adtvatar.SQLConnector">
+    <Position X="4.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIBAAAAAAAAgAAEAJAAAAIAAEACAAAAAAACABAI=</HashCode>
+      <FileName>SQLConnector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Adtvatar.Nation">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAgAAAAAAAAAQAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Nation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Adtvatar.drinkTypes">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAKAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>drinkTypes.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
