@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Net;
+using System.Collections;
 
 namespace Adtvatar
 {
@@ -22,45 +23,33 @@ namespace Adtvatar
     /// </summary>
     public partial class MainWindow : Window
     {
-        Dictionary<int, drinkTypes> drinks;
+        Dictionary<string, Drink> drinks;
         SQLConnector connector;
         Nation[] nations;
         DispatcherTimer timer;
         Nation Attacker;
 
+
         public MainWindow()
         {
             InitializeComponent();
-            
+            Advatar ad = new Advatar();
+            ad.Show();
         }
 
         ~MainWindow()
         {
-            timer.Stop();
+            try
+            {
+                timer.Stop();
+            }
+            catch { };
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
             updateScores();
 
-            Random rnd = new Random();
-            if(rnd.Next(0, 10) == 7)
-            {
-                //TO DO
-                animationUpdateAttacker();
-
-                //Rotate throug all nations
-                if (Attacker.ID == 3)
-                    Attacker = nations[0];
-                else
-                    Attacker = nations[Attacker.ID++];
-            }
-
-        }
-
-        void animationUpdateAttacker()
-        {
-            //TO DO
         }
 
         private void initialiseData()
@@ -72,21 +61,17 @@ namespace Adtvatar
             nations[3] = new Nation(3, "Bacardi");
 
             //TO DO: Find right IDs
-            drinks = new Dictionary<int, drinkTypes>();
-            drinks.Add(1, drinkTypes.Beer); //Bier
-            drinks.Add(2, drinkTypes.Beer); //Meter
-            drinks.Add(3, drinkTypes.Beer); //Pull bier
-            drinks.Add(4, drinkTypes.Beer); //Pull bier korting
-            drinks.Add(5, drinkTypes.Beer); //Pitcher
-        
-            drinks.Add(6, drinkTypes.Soda); //Fris
+            drinks = new Dictionary<string, Drink>();
+            drinks.Add("Bier", new Drink(3, drinkTypes.Beer)); //Bier
+            drinks.Add("%Meter%", new Drink(39, drinkTypes.Beer));
+            drinks.Add("%Pitcher%", new Drink(27, drinkTypes.Beer));
+            drinks.Add("%pul%bier%", new Drink(5, drinkTypes.Beer)); //Pul bier
+            drinks.Add("%pitcher%bier%", new Drink(5, drinkTypes.Beer)); //Pitcher
 
-            drinks.Add(7, drinkTypes.Apfelkorn);
-            drinks.Add(8, drinkTypes.Bacardi); //Razz
-            drinks.Add(9, drinkTypes.Bacardi); //Original
-            drinks.Add(10, drinkTypes.Bacardi); //Lemon
+            drinks.Add("Fris", new Drink(1, drinkTypes.Soda)); //Fris
 
-            Attacker = nations[0];
+            drinks.Add("%Apfelkorn%", new Drink(20, drinkTypes.Apfelkorn));
+            drinks.Add("%Bacardi%", new Drink(20, drinkTypes.Bacardi)); //Razz
         }
 
         void setupConnection()
@@ -97,68 +82,73 @@ namespace Adtvatar
 
         private void updateScores()
         {
-            foreach(KeyValuePair<int, drinkTypes> drink in drinks)
+            foreach (KeyValuePair<string, Drink> drink in drinks)
             {
-                if (drink.Value.ToString() == Attacker.Name)
+                int score = connector.getConsumptionLastMinute(drink.Key);
+                switch (drink.Value.DrinkType)
                 {
-                    int score = connector.getConsumptionLastMinute(drink.Key);
-                    switch(Attacker.ID)
-                    {
-                        case 0:
-                            nations[0].Points += score;
-                            break;
+                    case drinkTypes.Beer:
+                        nations[0].Points += (score * drink.Value.Factor);
+                        break;
 
-                        case 1:
-                            nations[1].Points += score;
-                            break;
+                    case drinkTypes.Soda:
+                        nations[1].Points += (score * drink.Value.Factor);
+                        break;
 
-                        case 2:
-                            nations[2].Points += score;
-                            break;
+                    case drinkTypes.Apfelkorn:
+                        nations[2].Points += (score * drink.Value.Factor);
+                        break;
 
-                        case 3:
-                            nations[3].Points += score;
-                            break;
-                    }
+                    case drinkTypes.Bacardi:
+                        nations[3].Points += (score * drink.Value.Factor);
+                        break;
                 }
-
-                #region Redundant
-                //CODE FOR ALWAYS UPDATING SCORES
-                //switch (drink.Value)
-                //{
-                //    case drinkTypes.Beer:
-                //        nations[0].Points += score;
-                //        break;
-
-                //    case drinkTypes.Soda:
-                //        nations[1].Points += score;
-                //        break;
-
-                //    case drinkTypes.Apfelkorn:
-                //        nations[2].Points += score;
-                //        break;
-
-                //    case drinkTypes.Bacardi:
-                //        nations[3].Points += score;
-                //        break;
-                //}
-                #endregion
 
             }
         }
 
         private void btConnect_Click(object sender, RoutedEventArgs e)
         {
+            btSOS.IsEnabled = true;
+
             initialiseData();
             setupConnection();
 
             timer = new DispatcherTimer(DispatcherPriority.Send);
             timer.Tick += Timer_Tick;
             //Set interval at 1 minute
-            timer.Interval = new TimeSpan(0, 1, 0);
+            timer.Interval = new TimeSpan(0, 0, 30);
             timer.Start();
 
             Timer_Tick(null, null);
+            
+        }
+
+        private void btSOS_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (KeyValuePair<string, Drink> drink in drinks)
+            {
+                int score = connector.getConsumptionToday(drink.Key);
+                switch (drink.Value.DrinkType)
+                {
+                    case drinkTypes.Beer:
+                        nations[0].Points += (score * drink.Value.Factor);
+                        break;
+
+                    case drinkTypes.Soda:
+                        nations[1].Points += (score * drink.Value.Factor);
+                        break;
+
+                    case drinkTypes.Apfelkorn:
+                        nations[2].Points += (score * drink.Value.Factor);
+                        break;
+
+                    case drinkTypes.Bacardi:
+                        nations[3].Points += (score * drink.Value.Factor);
+                        break;
+                }
+
+            }
         }
     }
 }

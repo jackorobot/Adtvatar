@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Adtvatar"
         mc:Ignorable="d"
         Title="MainWindow" Height="242.614" Width="285.369">
-    <Grid Margin="0,0,2,0">
+    <Grid Margin="0,0,1.667,16.333">
         <TextBox x:Name="tbIP" HorizontalAlignment="Left" Height="23" Margin="112,22,0,0" TextWrapping="Wrap" Text="192.168.1.1:3306" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="tbDatabase" HorizontalAlignment="Left" Height="23" Margin="112,50,0,0" TextWrapping="Wrap" Text="barkas_1_0_prod" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="tbUsername" HorizontalAlignment="Left" Height="23" Margin="112,78,0,0" TextWrapping="Wrap" Text="barkasread" VerticalAlignment="Top" Width="120"/>
@@ -15,7 +15,8 @@
         <Label x:Name="lbl_Username" Content="Username" HorizontalAlignment="Left" Margin="37,75,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lbl_Database" Content="Database" HorizontalAlignment="Left" Margin="37,46,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.439,1.322"/>
         <PasswordBox x:Name="pbPass" HorizontalAlignment="Left" Margin="112,110,0,0" VerticalAlignment="Top" Width="120" Password="lezen"/>
-        <Button x:Name="btConnect" Content="Connect" HorizontalAlignment="Left" Margin="37,141,0,0" VerticalAlignment="Top" Width="195" IsDefault="True" Click="btConnect_Click"/>
+        <Button x:Name="btConnect" Content="Connect" HorizontalAlignment="Left" Margin="37,159,0,0" VerticalAlignment="Top" Width="195" IsDefault="True" Click="btConnect_Click"/>
+        <Button x:Name="btSOS" Content="SOS" HorizontalAlignment="Left" Margin="37,133,0,0" VerticalAlignment="Top" Width="195" Click="btSOS_Click" IsEnabled="False"/>
 
     </Grid>
 </Window>

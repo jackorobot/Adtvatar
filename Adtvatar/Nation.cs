@@ -19,8 +19,13 @@ namespace Adtvatar
 
         public int ID
         {
-            get { return id; }
-            set { id = value; }
+            get {
+                    return id;
+                }
+
+            set {
+                    id = value;
+                }
         }
         public string Name
         {
@@ -34,6 +39,7 @@ namespace Adtvatar
                 name = value;
             }
         }
+
 
         public int Points
         {

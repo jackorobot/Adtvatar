@@ -122,22 +122,52 @@ namespace Adtvatar
             }
         }
 
-        public int getConsumptionLastMinute(int drinkID)
+        public int getConsumptionLastMinute(string drinkName)
         {
             DateTime date = new DateTime();
             date = DateTime.Today;
 
-            String query = "SELECT SUM(Bestelling_AantalS)" + "FROM Bestelling WHERE Bestelling_Bon IN (SELECT Bon_ID FROM Bon WHERE Bon_datum = '" + date.ToLongDateString() + "' AND Bon_Time > '" + (date.Subtract(new TimeSpan(0, 1, 0))) + "') AND Bestelling_Wat =" + drinkID;
+            string queryUnits = "SELECT SUM(Bestelling_AantalS)" + @"FROM Bestelling 
+                    WHERE Bestelling_Bon IN (SELECT Bon_ID FROM Bon WHERE Bon_datum = '" + date.ToLongDateString() + @"'
+                    AND Bon_Time > '" + (date.Subtract(new TimeSpan(0, 0, 30))) + "') AND Bestelling_Wat IN (SELECT Prijs_ID FROM barkasread.prijs WHERE Prijs_Naam LIKE '"+ drinkName + "'))";
+
+            string queryFlessen = "SELECT SUM(Bestelling_AantalS50)" + @"FROM Bestelling 
+                    WHERE Bestelling_Bon IN (SELECT Bon_ID FROM Bon WHERE Bon_datum = '" + date.ToLongDateString() + @"'
+                    AND Bon_Time > '" + (date.Subtract(new TimeSpan(0, 0, 30))) + "') AND Bestelling_Wat IN (SELECT Prijs_ID FROM barkasread.prijs WHERE Prijs_Naam LIKE '" + drinkName + "'))";
 
             try
             {
-                return int.Parse(executeCommand(query));
+                int score = int.Parse(executeCommand(queryUnits)) + int.Parse(executeCommand(queryFlessen)) * 20;
+                return score;
             }
             catch
             {
                 return 0;
             }
 
+        }
+
+        public int getConsumptionToday(string drinkName)
+        {
+            DateTime date = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 20, 10, 0);
+
+            string queryUnits = "SELECT SUM(Bestelling_AantalS)" + @"FROM Bestelling 
+                    WHERE Bestelling_Bon IN (SELECT Bon_ID FROM Bon WHERE Bon_datum = '" + date.ToLongDateString() + @"'
+                    AND Bon_Time > '" + (date.Subtract(new TimeSpan(0, 0, 30))) + "') AND Bestelling_Wat IN (SELECT Prijs_ID FROM barkasread.prijs WHERE Prijs_Naam LIKE '" + drinkName + "'))";
+
+            string queryFlessen = "SELECT SUM(Bestelling_AantalS50)" + @"FROM Bestelling 
+                    WHERE Bestelling_Bon IN (SELECT Bon_ID FROM Bon WHERE Bon_datum = '" + date.ToLongDateString() + @"'
+                    AND Bon_Time > '" + (date.Subtract(new TimeSpan(0, 0, 30))) + "') AND Bestelling_Wat IN (SELECT Prijs_ID FROM barkasread.prijs WHERE Prijs_Naam LIKE '" + drinkName + "'))";
+
+            try
+            {
+                int score = int.Parse(executeCommand(queryUnits)) + int.Parse(executeCommand(queryFlessen)) * 20;
+                return score;
+            }
+            catch
+            {
+                return 0;
+            }
         }
     }
 }
