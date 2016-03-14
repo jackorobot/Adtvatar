@@ -60,7 +60,7 @@ namespace Adtvatar
             }
             catch(Exception ex)
             {
-                System.Windows.MessageBox.Show("An problem occurred during the database updata \n" + ex.Message);
+                System.Windows.MessageBox.Show("An problem occurred during the database update \n" + ex.Message);
             }
             finally
             {

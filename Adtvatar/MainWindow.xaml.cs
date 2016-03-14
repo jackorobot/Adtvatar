@@ -27,7 +27,6 @@ namespace Adtvatar
         SQLConnector connector;
         Nation[] nations;
         DispatcherTimer timer;
-        Nation Attacker;
 
 
         public MainWindow()

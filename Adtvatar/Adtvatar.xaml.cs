@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Drawing;
 
 namespace Adtvatar
 {
@@ -22,6 +23,8 @@ namespace Adtvatar
         public Advatar()
         {
             InitializeComponent();
+            Image overlay = new Image();
+            
         }
     }
 }
