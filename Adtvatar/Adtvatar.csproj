@@ -60,14 +60,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Adtvatar.xaml.cs">
-      <DependentUpon>Adtvatar.xaml</DependentUpon>
+    <Compile Include="Adtvatar Window.xaml.cs">
+      <DependentUpon>Adtvatar Window.xaml</DependentUpon>
     </Compile>
     <Compile Include="Drink.cs" />
     <Compile Include="drinkTypes.cs" />
     <Compile Include="Nation.cs" />
     <Compile Include="SQLConnector.cs" />
-    <Page Include="Adtvatar.xaml">
+    <Page Include="Adtvatar Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

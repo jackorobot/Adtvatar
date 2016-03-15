@@ -108,18 +108,23 @@ namespace Adtvatar
 
         private void btConnect_Click(object sender, RoutedEventArgs e)
         {
-            btSOS.IsEnabled = true;
-
             initialiseData();
             setupConnection();
 
-            timer = new DispatcherTimer(DispatcherPriority.Send);
-            timer.Tick += Timer_Tick;
-            //Set interval at 1 minute
-            timer.Interval = new TimeSpan(0, 0, 30);
-            timer.Start();
+            if (!connector.getConsumptionToday("Bier").ToString().ToLower().Contains("error"))
+            {
+                timer = new DispatcherTimer(DispatcherPriority.Send);
+                timer.Tick += Timer_Tick;
+                //Set interval at 1 minute
+                timer.Interval = new TimeSpan(0, 0, 30);
+                timer.Start();
 
-            Timer_Tick(null, null);
+                btSOS.IsEnabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Error making a connection");
+            }
             
         }
 
