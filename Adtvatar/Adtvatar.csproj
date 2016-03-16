@@ -42,6 +42,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -60,17 +62,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Adtvatar Window.xaml.cs">
-      <DependentUpon>Adtvatar Window.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Drink.cs" />
     <Compile Include="drinkTypes.cs" />
     <Compile Include="Nation.cs" />
     <Compile Include="SQLConnector.cs" />
-    <Page Include="Adtvatar Window.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

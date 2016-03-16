@@ -124,6 +124,14 @@ namespace Adtvatar
             }
         }
 
+        public bool isOpen()
+        {
+            if (sqlConnection.State.ToString() == "Open")
+                return true;
+            else
+                return false;
+        }
+
         public int getConsumptionLastMinute(string drinkName)
         {
             DateTime date = new DateTime();
