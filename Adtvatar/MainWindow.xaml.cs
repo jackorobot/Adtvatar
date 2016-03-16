@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Net;
 using System.Collections;
+using System.IO;
 
 namespace Adtvatar
 {
@@ -28,12 +29,9 @@ namespace Adtvatar
         Nation[] nations;
         DispatcherTimer timer;
 
-
         public MainWindow()
         {
             InitializeComponent();
-            Advatar ad = new Advatar();
-            ad.Show();
         }
 
         ~MainWindow()
@@ -54,15 +52,15 @@ namespace Adtvatar
         private void initialiseData()
         {
             nations = new Nation[4];
-            nations[0] = new Nation(0, "Beer");
-            nations[1] = new Nation(1, "Soda");
+            nations[0] = new Nation(0, "Bier");
+            nations[1] = new Nation(1, "Fris");
             nations[2] = new Nation(2, "Apfelkorn");
             nations[3] = new Nation(3, "Bacardi");
 
             //TO DO: Find right IDs
             drinks = new Dictionary<string, Drink>();
             drinks.Add("Bier", new Drink(3, drinkTypes.Beer)); //Bier
-            drinks.Add("%Meter%", new Drink(39, drinkTypes.Beer));
+            drinks.Add("%Meter%", new Drink(36, drinkTypes.Beer));
             drinks.Add("%Pitcher%", new Drink(27, drinkTypes.Beer));
             drinks.Add("%pul%bier%", new Drink(5, drinkTypes.Beer)); //Pul bier
             drinks.Add("%pitcher%bier%", new Drink(5, drinkTypes.Beer)); //Pitcher
@@ -102,8 +100,9 @@ namespace Adtvatar
                         nations[3].Points += (score * drink.Value.Factor);
                         break;
                 }
-
             }
+
+            saveToText();
         }
 
         private void btConnect_Click(object sender, RoutedEventArgs e)
@@ -120,6 +119,15 @@ namespace Adtvatar
                 timer.Start();
 
                 btSOS.IsEnabled = true;
+
+                foreach (KeyValuePair<string, Drink> drink in drinks)
+                {
+                    cbConsumptie.Items.Add(drink.Key);
+                }
+
+                btOpslaan.IsEnabled = true;
+                cbConsumptie.IsEnabled = true;
+                tbFactor.IsEnabled = true;
             }
             else
             {
@@ -130,29 +138,65 @@ namespace Adtvatar
 
         private void btSOS_Click(object sender, RoutedEventArgs e)
         {
-            foreach (KeyValuePair<string, Drink> drink in drinks)
+            if (connector.isOpen())
             {
-                int score = connector.getConsumptionToday(drink.Key);
-                switch (drink.Value.DrinkType)
+                foreach (KeyValuePair<string, Drink> drink in drinks)
                 {
-                    case drinkTypes.Beer:
-                        nations[0].Points += (score * drink.Value.Factor);
-                        break;
+                    int score = connector.getConsumptionToday(drink.Key);
+                    switch (drink.Value.DrinkType)
+                    {
+                        case drinkTypes.Beer:
+                            nations[0].Points += (score * drink.Value.Factor);
+                            break;
 
-                    case drinkTypes.Soda:
-                        nations[1].Points += (score * drink.Value.Factor);
-                        break;
+                        case drinkTypes.Soda:
+                            nations[1].Points += (score * drink.Value.Factor);
+                            break;
 
-                    case drinkTypes.Apfelkorn:
-                        nations[2].Points += (score * drink.Value.Factor);
-                        break;
+                        case drinkTypes.Apfelkorn:
+                            nations[2].Points += (score * drink.Value.Factor);
+                            break;
 
-                    case drinkTypes.Bacardi:
-                        nations[3].Points += (score * drink.Value.Factor);
-                        break;
+                        case drinkTypes.Bacardi:
+                            nations[3].Points += (score * drink.Value.Factor);
+                            break;
+                    }
+
                 }
-
             }
+        }
+
+        private void saveToText(){
+            string fileName = @"D:\Users\Jesse\Google Drive\adtvatar\drinks.csv";
+            var csv = new StringBuilder();
+
+            foreach(Nation nation in nations){
+                var id = nation.ID;
+                var name = nation.Name;
+                var points = nation.Points;
+                var newLine = string.Format("{0},{1},{2};", id, name, points);
+                csv.AppendLine(newLine);
+            }
+
+            try
+            {
+                File.WriteAllText(fileName, csv.ToString());
+            }
+            catch { MessageBox.Show("Error writing csv file"); }
+        }
+
+        private void cbConsumptie_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                tbFactor.Text = drinks[cbConsumptie.SelectedItem.ToString()].Factor.ToString();
+            }
+            catch { }
+        }
+
+        private void btOpslaan_Click(object sender, RoutedEventArgs e)
+        {
+            drinks[cbConsumptie.Text].Factor = Convert.ToInt32(tbFactor.Text);
         }
     }
 }
