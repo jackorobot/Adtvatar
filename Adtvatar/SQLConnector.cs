@@ -45,9 +45,10 @@ namespace Adtvatar
             {
                 sqlConnection.Open();
             }
-            catch
+            catch(Exception ex)
             {
-                System.Windows.MessageBox.Show("Failed to make a connection to the database. \n Please check the login credentials.");
+                System.Windows.MessageBox.Show("Failed to make a connection to the database. \n Please check the login credentials. \n" + ex.Message);
+                return "Error Connecting";
             }
 
             MySqlDataReader reader = command.ExecuteReader();
@@ -61,6 +62,7 @@ namespace Adtvatar
             catch(Exception ex)
             {
                 System.Windows.MessageBox.Show("An problem occurred during the database update \n" + ex.Message);
+                return "Error Updating";
             }
             finally
             {
